@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <title>Search Result</title>
+  </head>
+  <body>
+    <div class="result-container">
+      <h1 class="result-header">#JuaraSTBI Search Engine Result</h1>
+      <form action="{{ url_for('search_result') }}" method="POST">
+        <div class="search-container">
+          <input
+            id="search-input"
+            type="text"
+            class="search-bar"
+            name="search"
+            placeholder="Search..."
+            autocomplete="off"
+          />
+          <img
+            src="{{ url_for('static', filename='img/search.png') }}"
+            alt="Search"
+            class="search-icon"
+          />
+        </div>
+      </form>
+      <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+      <h2 class="result-header">Query: {{ query }}</h2>
+      {% set count = namespace(value=0) %}
+      {% for result in result_json %}
+      {% if result['Score'] != 0 %}
+      <div class="result-item-container">
+        <p style="font-size: 20px; color: rgb(230, 230, 230)">
+          File Name: {{ result['filename'] }} | Score: {{ result['Score'] }}
+        </p>
+        <p class="result-item">{{ result['file_contents'] }}</p>
+        <br />
+      </div>
+      {% set count.value = count.value + 1 %} 
+      {% endif %} 
+      {% endfor %} 
+      {% if count.value == 0 %}
+      <br /><br /><br />
+      <img
+        src="{{ url_for('static', filename='img/no-result.jpg') }}"
+        width="300px"
+      /><br /><br />
+      <p style="font-size: 30px; color: rgb(230, 230, 230)">No result found.</p>
+      {% endif %}
+    </div>
+  </body>
+</html>
